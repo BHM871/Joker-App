@@ -1,6 +1,4 @@
-package co.tiagoaguiar.tutorial.jokerappdev.data
-
-import co.tiagoaguiar.tutorial.jokerappdev.view.CategoryItem
+package co.tiagoaguiar.tutorial.jokerappdev.interfaces
 
 interface ListCategoryCallback {
 

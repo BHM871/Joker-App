@@ -4,4 +4,7 @@
     <string name="menu_joke_day">Piada do Dia</string>
     <string name="menu_about">Sobre</string>
     <string name="social">Social</string>
+    <string name="version">Versão: %1$s</string>
+    <string name="text">Hello Word!Hello Word!Hello Word!Hello Word!Hello Word!Hello Word!Hello Word!Hello Word!Hello Word!Hello Word!Hello Word!Hello Word!Hello Word!Hello Word!Hello Word!</string>
+    <string name="link"><![CDATA[https://music.youtube.com/watch?v=uYHYsau6g8M&list=RDAMVMuYHYsau6g8M]]></string>
 </resources>

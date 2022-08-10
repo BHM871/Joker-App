@@ -8,16 +8,17 @@ import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import co.tiagoaguiar.tutorial.jokerappdev.R
 import co.tiagoaguiar.tutorial.jokerappdev.model.Category
-import co.tiagoaguiar.tutorial.jokerappdev.presentation.HomePresentation
+import co.tiagoaguiar.tutorial.jokerappdev.presentation.HomePresenter
 import com.xwray.groupie.GroupieAdapter
 
 class HomeFragment : Fragment() {
 
-    private lateinit var presenter: HomePresentation
+    private lateinit var presenter: HomePresenter
 
     private lateinit var progress: ProgressBar
 
@@ -25,7 +26,7 @@ class HomeFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        presenter = HomePresentation(this)
+        presenter = HomePresenter(this)
     }
 
     override fun onCreateView(
@@ -39,24 +40,35 @@ class HomeFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        progress = view.findViewById(R.id.progress_bar)
+
+        adapter = GroupieAdapter()
+        progress = view.findViewById(R.id.progress_main)
+
+        if(adapter.itemCount == 0){
+            presenter.findAllCategories()
+        }
 
         val rvMain: RecyclerView = view.findViewById(R.id.recycler_fragment_home)
-        adapter = GroupieAdapter()
         rvMain.layoutManager = LinearLayoutManager(requireContext())
         rvMain.adapter = adapter
 
-        presenter.findAllCategories()
+        adapter.setOnItemClickListener { item, _ ->
+            val bundle = Bundle()
+            val categoryName = (item as CategoryItem).category.name
+            bundle.putString(JokeFragment.CATEGORY_KEY, categoryName)
+            findNavController().navigate(R.id.action_nav_home_to_nav_joke, bundle)
+        }
+
     }
 
-    fun showProgress(){
+    fun showProgress() {
         progress.visibility = View.VISIBLE
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun onSuccess(response: List<String>){
+    fun onSuccess(response: List<Category>) {
         val categories = response.map {
-            CategoryItem(Category(it, 0xfff0f0f0))
+            CategoryItem(it)
         }
 
         adapter.clear()
@@ -64,11 +76,11 @@ class HomeFragment : Fragment() {
         adapter.notifyDataSetChanged()
     }
 
-    fun onFailure(message: String){
+    fun onFailure(message: String) {
         Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
     }
 
-    fun hideProgress(){
+    fun hideProgress() {
         progress.visibility = View.GONE
     }
 }
